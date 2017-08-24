@@ -1,0 +1,314 @@
+<html>
+<head>
+<script src="https://code.jquery.com/jquery-2.2.3.min.js"></script>
+<link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
+<link rel="stylesheet" href="css/style.css"></input>
+<script type="text/javascript" src="js/kb.js"></script>
+</head>
+<body>
+<div class="container">
+<h3>Knowledge Base Page Example</h3>
+<p>The interactive table works as a Q&A prompt that, when finished, outputs a set of instructions to follow based on the answers provided.</p>
+<p>The tax department of New Zealand uses thousands of pages just like this one to help answer customer queries based on the customer's tax obligations and advise what actions the customer should take next.</p>
+<table class="table_main" cellspacing="0">
+<tr><td><h4 class="ques">&darr; Select Answer</h4><td><h4 class="ans">&darr; Question prompts</h4></td></tr>
+<tr><td class='td_select_width format'><span class='A'></span></td><td class="format"><span class='Q'></span></td></tr>
+<tr><td class='td_select_width format'><span class='A'></span></td><td class="format"><span class='Q'></span></td></tr>
+<tr><td class='td_select_width format'><span class='A'></span></td><td class="format"><span class='Q'></span></td></tr>
+<tr><td class='td_select_width format'><span class='A'></span></td><td class="format"><span class='Q'></span></td></tr>
+<tr><td class='td_select_width'><button onClick='nextSteps()'>Next steps</button></td><td><span id='finalAnswer'></span></td></tr>
+</table>
+</div>
+<script>
+// Collate questions to ask
+function askMore(level){
+
+	questions = $(".Q").toArray();
+	answers = $(".A").toArray();
+
+	// Clear all question and answer spans
+	for (var i = level; i < questions.length; i++) {
+		questions[i].innerHTML = "";
+		answers[i].innerHTML = "";
+	}
+
+	// Initially clear final answer span
+	$('#finalAnswer').html("");
+
+	// Global note box var.  When setting notes use this var
+	var note_box = "";
+	var note_box2 = "";
+
+	// Sart questions
+	if (level == 0){
+		note_box += "<div class='note_banner'><strong>Note:</strong></div>";
+		note_box += "<div class='note_detail'>A stop point must be answered before any other question is asked or before 'Next steps' is selected.<br><br>If unanswered, a validation alert will prompt the staff member to select an answer.</div>";
+		questions[level].innerHTML = "<p>Question 1 - stop point question</p>" + note_box;
+		var q1 = "<select id='qa1' onChange='askMore(" + (level+1) + ")'>";
+			q1 += "<option value=''>Choose</option>";
+			q1 += "<option value='1a'>1a</option>";
+			q1 += "<option value='1b'>1b</option>";
+			q1 += "<option value='1c'>1c</option>";
+			q1 += "</select>";
+		answers[level].innerHTML = q1;
+	}
+	else if (level == 1){
+		if ($('#qa1').val() == "1a") {
+			questions[level].innerHTML = "<p>Question 2 - stop point question (<strong>1a</strong> chosen at question 1)</p>";
+				var q2 = "<select id='qa2' onChange='askMore("+(level+1)+")'>";
+				q2 += "<option value=''>Choose</option>";
+				q2 += "<option value='2a'>2a</option>";
+				q2 += "<option value='2b'>2b</option>";
+				q2 += "<option value='2c'>2c</option>";
+				q2 += "</select>";
+			answers[level].innerHTML = q2;
+		}
+		else if ($('#qa1').val() == "1b") {
+			note_box += "<div class='note_banner'><strong>Note:</strong></div>";
+			note_box += "<div class='note_detail'>Answer <strong>1b</strong> is not a stop point so more than 1 question appears when this answer is selected.</div>";
+			questions[level].innerHTML = "<p>Question 2 (<strong>1b</strong> chosen at question 1)</p>" + note_box;
+				var q2 = "<select id='qa2' onChange='askMore("+(level+1)+")'>";
+					q2 += "<option value=''>Choose</option>";
+					q2 += "<option value='2a'>2a</option>";
+					q2 += "<option value='2b'>2b</option>";
+					q2 += "<option value='2c'>2c</option>";
+				q2 += "</select>";
+			answers[level].innerHTML = q2;
+
+			questions[level+1].innerHTML = "<p>Question 3 (<strong>1b</strong> chosen at question 1)</p>";
+				var q3 = "<select id='qa3' onChange='askMore("+(level+2)+")'>";
+					q3 += "<option value=''>Choose</option>";
+					q3 += "<option value='3a'>3a</option>";
+					q3 += "<option value='3b'>3b</option>";
+					q3 += "<option value='3c'>3c</option>";
+				q3 += "</select>";
+			answers[level+1].innerHTML = q3;
+
+			note_box2 += "<div class='note_banner2'><strong>Note:</strong></div>";
+			note_box2 += "<div class='note_detail2'>A check box acts as a yes/no answer.  When this is checked it acts as a 'yes' answer.  When unchecked it acts as a 'no' answer.</div>";
+			questions[level+2].innerHTML = "<p>Question 4 (<strong>1b</strong> chosen at question 1)</p>" + note_box2;
+			answers[level+2].innerHTML = "<input type='checkbox' id='Q4a'>";
+		}
+		else if ($('#qa1').val() == "1c") {
+			questions[level].innerHTML = "<p>Question 2 - stop point question (<strong>1c</strong> chosen at question 1)</p>";
+				var q2 = "<select id='qa2' onChange='askMore("+(level+1)+")'>";
+					q2 += "<option value=''>Choose</option>";
+					q2 += "<option value='2a'>2a</option>";
+					q2 += "<option value='2b'>2b</option>";
+					q2 += "<option value='2c'>2c</option>";
+				q2 += "</select>";
+			answers[level].innerHTML = q2;
+		}
+	}
+	else if (level == 2){
+		if ($('#qa2').val() == "2a") {
+			questions[level].innerHTML = "<p>Question 3 (<strong>2a</strong> chosen at question 2)</p>";
+				var q3 = "<select id='qa3' onChange='askMore("+(level+1)+")'>";
+					q3 += "<option value=''>Choose</option>";
+					q3 += "<option value='3a'>3a</option>";
+					q3 += "<option value='3b'>3b</option>";
+					q3 += "<option value='3c'>3c</option>";
+				q3 += "</select>";
+			answers[level].innerHTML = q3;
+		}
+		else if ($('#qa2').val() == "2b") {
+			questions[level].innerHTML = "<p>Question 3 (<strong>2b</strong> chosen at question 2)</p>";
+				var q3 = "<select id='qa3' onChange='askMore("+(level+1)+")'>";
+					q3 += "<option value=''>Choose</option>";
+					q3 += "<option value='3a'>3a</option>";
+					q3 += "<option value='3b'>3b</option>";
+					q3 += "<option value='3c'>3c</option>";
+				q3 += "</select>";
+			answers[level].innerHTML = q3;
+		}
+		else if ($('#qa2').val() == "2c") {
+			questions[level].innerHTML = "<p>Question 3 (<strong>2c</strong> chosen at question 2)</p>";
+				var q3 = "<select id='qa3' onChange='askMore("+(level+1)+")'>";
+					q3 += "<option value=''>Choose</option>";
+					q3 += "<option value='3a'>3a</option>";
+					q3 += "<option value='3b'>3b</option>";
+					q3 += "<option value='3c'>3c</option>";
+				q3 += "</select>";
+			answers[level].innerHTML = q3;
+		}
+	}
+	else if (level == 3){
+		if ($('#qa3').val() == "3a"){
+			note_box += "<div class='note_banner'><strong>Note:</strong></div>";
+			note_box += "<div class='note_detail'>A check box acts as a yes/no answer.  When this is checked it acts as a 'yes' answer.  When unchecked it acts as a 'no' answer.</div>";
+			questions[level].innerHTML = "<p>Question 4 (<strong>3a</strong> chosen at question 3)</p>" + note_box;
+			answers[level].innerHTML = "<input type='checkbox' id='qa4' value='4'>";
+		}
+		else if ($('#qa3').val() == "3b"){
+			note_box += "<div class='note_banner'><strong>Note:</strong></div>";
+			note_box += "<div class='note_detail'>A check box acts as a yes/no answer.  When this is checked it acts as a 'yes' answer.  When unchecked it acts as a 'no' answer.</div>";
+			questions[level].innerHTML = "<p>Question 4 (<strong>3b</strong> chosen at question 3)</p>" + note_box;
+			answers[level].innerHTML = "<input type='checkbox' id='qa4' value='4'>";
+		}
+		else if ($('#qa3').val() == "3c"){
+			questions[level].innerHTML = "<p>Question 4 (<strong>3c</strong> chosen at question 3)</p>";
+				var q4 = "<select id='qa4' onChange=''>";
+					q4 += "<option value=''>Choose</option>";
+					q4 += "<option value='4a'>4a</option>";
+					q4 += "<option value='4b'>4b</option>";
+					q4 += "<option value='4c'>4c</option>";
+				q4 += "</select>";
+			answers[level].innerHTML = q4;
+		}
+	}
+}
+
+// END CALCULATOR SCRIPT
+//======================
+// Display answer based on user input
+function nextSteps(level){
+	var content = "";
+
+	// Validate user input
+	var errors = "";
+	if ($('#qa1').val() == "") 	{errors += "\n- Question 1";}
+	if ($('#qa2').val() == "") 	{errors += "\n- Question 2";}
+	if ($('#qa3').val() == "") 	{errors += "\n- Question 3";}
+	if ($('#qa4').val() == "") 	{errors += "\n- Question 4";}
+	if (errors != "") 		{alert("Please answer these fields:" + errors); return false;}
+
+	// Start answer section
+	content += "<h3>Advise customer the following</h3>";
+	content += "<ol>"
+		content += "<li>You chose <strong>" + qa1.value + ", " + qa2.value + ", " + qa3.value + ", " + (qa4.checked || qa4.value != 'choose' ? qa4.value : "") + "</strong>.  Based on that answer it is advised the customer calculate their basal metabolic rate.</li>";
+		content += "<li>Using the calculator below, prompt customer through calc steps and then relay results to customer.</li>";
+	content += "</ol>";
+
+	content += "<div>";
+		content += "<div class='calc_detail'>"
+		content += "<table class='table_main' cellspacing='0'>";
+		content += "<tr><td><h4 class='ques'>&darr; Select Answer</h4><td>";
+		content += "<h4 class='ans'>&darr; Question prompts</h4></td></tr>";
+			content += "<tr>";
+				content += "<td class='format td_select_width'>" + gender_factor + "</td>";
+				content += "<td class='format'><p><strong>Gender</strong></p></td>";
+			content += "</tr>";
+			content += "<tr>";
+				content += "<td class='format td_select_width'><input type='text' name='age_Range' id='age_Range' class='infoField'></td>";
+				content += "<td class='format'><p><strong>Age</strong></p></td>";
+			content += "</tr>";
+			content += "<tr>";
+				content += "<td class='format td_select_width'><input type='text' name='weight_Range' id='weight_Range' class='infoField'></td>";
+				content += "<td class='format'><p><strong>Weight in kg</strong></p></td>";
+			content += "</tr>";
+			content += "<tr>"
+				content += "<td class='format td_select_width'><input type='text' name='height_Range' id='height_Range' class='infoField'></td>";
+				content += "<td class='format'><p><strong>Height in cm</strong></p></td>";
+			content += "</tr>";
+			content += "<tr>";
+				content += "<td class='format td_select_width'>" + activity_factor + "</td>";
+				content += "<td class='format'><p><strong>Activity Factor</strong></p></td>";
+			content += "</tr>";
+			content += "<tr>";
+				content += "<td class='td_select_width' style='vertical-align: top'><button onclick='calculateBMR()'>Results</button></td>";
+				content += "<td>&nbsp;</td>";
+			content += "</tr>";
+			content += "<tr>";
+				content += "<td class='calcResult' colspan='2'><span id='showBMR'></span></td>";
+			content += "</tr>";
+		content += "</table>";
+		content += "</div>";
+	content += "</div>";
+
+	// Display colated answer
+	$('#finalAnswer').html(content);
+}
+//======================
+// CALCULATOR SCRIPT
+//======================
+// Clear fields on load
+clearFields();
+
+// Collate gender options
+var gender_factor = "";
+gender_factor += "<select name='gender_Range' id='gender_Range'>";
+	gender_factor += "<option value='66'>Male</option>";
+	gender_factor += "<option value='655'>Female</option>";
+gender_factor += "</select>";
+
+// Collate activity options
+var activity_factor = "";
+activity_factor += "<select name='activity_Range' id='activity_Range'>";
+	activity_factor += "<option value='1.2'>Sedentary</option>";
+	activity_factor += "<option value='1.375'>Lightly active</option>";
+	activity_factor += "<option value='1.55'>Moderately active</option>";
+	activity_factor += "<option value='1.725'>Very active</option>";
+	activity_factor += "<option value='1.5'>Extremely active</option>";
+activity_factor += "</select>";
+
+// Reset field values
+function clearFields() {
+	$("#weight_Range").val();
+	$("#gender_Range").val();
+	$("#height_Range").val();
+	$("#age_Range").val();
+	$("#activity_Range").val();
+}
+
+// Calculates user input to produce output (Basal metabolic rate)
+function calculateBMR() {
+
+	// Set the values of each field to a variable which will be called during calcualtion
+	var genderRange = Number($("#gender_Range").val());
+	var weightRange = Number($("#weight_Range").val());
+	var heightRange = Number($("#height_Range").val());
+	var ageRange = Number($("#age_Range").val());
+	var activityRange = Number($("#activity_Range").val());
+
+	// When user is Male, calculate this formula
+	if (genderRange == 66) {
+		var male = genderRange;
+		var male_WeightNum = 13.7;
+		var male_Weight = Number(male_WeightNum * weightRange);
+		var male_HeightNum = 5;
+		var male_Height = Number(male_HeightNum * heightRange);
+		var male_AgeNum = 6.8;
+		var male_Age = Number(male_AgeNum * ageRange);
+		var male_BMR = Number((male + male_Weight) + (male_Height) - (male_Age));
+		var male_TDEE = activityRange;
+
+		// Collate calculation for Male
+		var result = "<div class='showBMRDiv'>";
+		result += "<h3>BMR (Basal Metabolic Rate)</h3>";
+		result += "<p>Based on the information you've provided, it is estamted that the amount of calories you burn per day (<em>no activity factor</em>) is: <h3>" + (male_BMR).toFixed(1) + "</h3></p>";
+		result += "<h3>AMR (Active Metabolic Rate)</h3>";
+		result += "<p>By multiplying your BMR measurement (<em>" + (male_BMR).toFixed(1) + "</em>) with your total daily energy expenditure (<em>activity factor</em>) it is estimated that your total daily calories burned is: <h3>" + (male_BMR * male_TDEE).toFixed(1) + "</h3></p>";
+		result += "</div>";
+
+		// Write result to page
+		$("#showBMR").html(result)
+	}
+	// When user is Female, calculate this formula
+	if (genderRange == 655) {
+		var female = genderRange;
+		var female_WeightNum = 9.6;
+		var female_Weight = Number(female_WeightNum * weightRange);
+		var female_HeightNum = 1.8;
+		var female_Height = Number(female_HeightNum * heightRange);
+		var female_AgeNum = 4.7;
+		var female_Age = Number(female_AgeNum * ageRange);
+		var female_BMR = Number((female + female_Weight) + (female_Height) - (female_Age));
+		var female_TDEE = activityRange;
+
+		// Collate calculation for Female
+		var result = "<div class='showBMRDiv'>";
+		result += "<h3>BMR (Basal Metabolic Rate)</h3>";
+		result += "<p>Based on the information you've provided, it is estamted that the amount of calories you burn per day (<em>no activity factor</em>) is: <h3>" + (female_BMR).toFixed(1) + "</h3></p>";
+		result += "<h3>AMR (Active Metabolic Rate)</h3>";
+		result += "<p>By multiplying your BMR measurement (<em>" + (female_BMR).toFixed(1) + "</em>) with your total daily energy expenditure (<em>activity factor</em>) it is estimated that your total daily calories burned is: <h3>" + (female_BMR * female_TDEE).toFixed(1) + "</h3></p>";
+		result += "</div>";
+
+		// Write result to page
+		$("#showBMR").html(result)
+
+	}
+}
+askMore(0);
+</script>
+</body>
+</html>
